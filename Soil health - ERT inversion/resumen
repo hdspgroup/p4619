@@ -1,0 +1,7 @@
+Despues de generar el modelo Random Forest de la otra carpeta, trabajé en el modelamiento del campo 3D de las propiedades edafológicas. Los códigos realizan el siguiente flujo de trabajo:
+
+1a) Genera un campo synthetico 3D de cada propiedad edafológica
+1b) Genera medidos syntheticos de las propiedades en puntos en el superficie
+2) Usa el modelo directo Random Forest a estimar la conductividad eléctrica (CE) de los campos 3D
+3) Corre un modelo inverso estimando los campos 3D de cada propiedad edafológica, teniendo en cuenta los medidos superficiales
+4) Kringe los resultados a mejor resolución
