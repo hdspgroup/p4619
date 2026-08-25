@@ -1,0 +1,18 @@
+EC-CEC linkage analysis
+Rows in original data: 59879
+Rows with EC: 40834
+Rows with CEC: 19036
+Rows with both EC and CEC: 0
+Stable repeat-point groups: 3163
+Stable groups with EC and CEC linked by POINTID: 1787
+
+Model comparison, EC in S/m, R^2 in log10 target space:
+  Raw EC rows, no CEC: N=10786, R^2=0.6247, RMSE=2.42327, MAE=0.986899
+  Raw CEC rows, CEC target: N=17939, R^2=0.1805, RMSE=10.2955, MAE=7.01044
+  Stable point EC, no CEC: N=3006, R^2=0.5428, RMSE=2.75405, MAE=0.871811
+  Stable point EC, measured/linked CEC: N=1787, R^2=0.5472, RMSE=2.74826, MAE=0.966281
+
+Interpretation guidance:
+  Use the raw EC model for the strongest direct predictive benchmark.
+  Use the stable point linked model to test whether CEC adds information at repeated stable sites.
+  Do not treat linked CEC as same-year measured CEC; it is a point-level proxy transferred across campaigns.

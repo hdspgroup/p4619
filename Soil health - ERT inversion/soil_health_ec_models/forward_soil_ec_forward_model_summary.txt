@@ -1,0 +1,16 @@
+Forward soil EC model
+Target: EC
+Units: S/m (from dS/m input)
+Rows used: 1787
+State variables: N, P, K, CEC, OC
+Missing optional state placeholders: Moisture
+Context variables: Clay, Silt, Sand, Coarse, pH_CaCl2, pH_H2O, CaCO3
+TSS in log10 space: 168.967
+
+Physics-informed forward: RMSE = 0.256752, MAE = 0.0936429, RSS = 71.106, R^2 = 0.5792
+Random Forest benchmark: RMSE = 0.292066, MAE = 0.0996366, RSS = 81.634, R^2 = 0.5169
+
+Interpretation:
+  State variables are the soil-health quantities we care about.
+  Context variables condition how those state variables translate into EC.
+  Clay belongs in the context block because it changes the EC response.

@@ -1,0 +1,12 @@
+Random Forest diagnostic summary
+Data file: C:\Users\hdsp\Documents\Data\Codex\data\data_comp.mat
+Model file: C:/Users/hdsp/Documents/Data/Codex/outputs/direct_ec_random_forest/direct_ec_rf_model.mat
+Rows used: 10786
+Overall RMSE = 1.77946 S/m
+Overall MAE = 0.62392 S/m
+Overall mean log residual = 0.015436
+
+Error by EC quantile:
+  [0.173, 1.37] | RMSE_log10=0.139291 | MAE_log10=0.111951 | MAE_Sm=0.249611 | mean log residual=0.0997505
+  [1.37, 2.19] | RMSE_log10=0.0800522 | MAE_log10=0.0595006 | MAE_Sm=0.255036 | mean log residual=0.0326674
+  [2.19, 60] | RMSE_log10=0.146484 | MAE_log10=0.109826 | MAE_Sm=1.36754 | mean log residual=-0.0862783

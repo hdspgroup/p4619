@@ -1,0 +1,394 @@
+Codex Session Notes
+Created: 2026-04-24
+
+This file is a working summary of the conversation and project state so the
+project can be resumed on another machine without relying on the live thread.
+
+===============================================================================
+1. Project Goal
+===============================================================================
+
+Long-term project goal:
+- Predict soil health using measured EC, pH, and water content.
+- Use deep learning or other machine-learning methods where appropriate.
+
+Current agreed modeling architecture:
+
+1. Forward model:
+   soil-health state variables + soil context variables -> EC
+
+2. Inverse model:
+   measured signals + soil context variables -> soil-health state variables
+
+3. Optional scoring layer:
+   predicted soil-health state variables -> crop-specific composite health score
+
+Agreed variable grouping:
+
+Soil-health state variables:
+- N
+- P
+- K
+- CEC
+- OC
+- Moisture
+
+Soil context variables:
+- Clay
+- Silt
+- Sand
+- Coarse
+- pH_CaCl2
+- pH_H2O
+- CaCO3
+
+Interpretation:
+- Clay belongs in the context block because it conditions how state variables
+  translate into EC.
+- Moisture is an expected state variable and placeholder, even when absent from
+  the current datasets.
+
+===============================================================================
+2. Main Datasets Used
+===============================================================================
+
+Current data folder:
+C:\Users\hdsp\Documents\Data\Codex\data
+
+Files:
+- data.mat
+  Original EC dataset with variables such as:
+  pH_CaCl2, pH_H2O, EC_sat, OC, P, N, K, Coarse, Clay, Sand, Silt, etc.
+
+- data_comp.mat
+  Expanded combined dataset with variables:
+  POINTID, Coarse, Clay, Silt, Sand, pH_CaCl2, pH_H2O, OC, CaCO3, N, P, K, CEC, EC
+
+Important notes about data_comp.mat:
+- EC is stored in dS/m and must be converted to S/m by multiplying by 0.1
+- Rows with EC and rows with CEC do not overlap directly in the same row
+- stable linked point tables were used to link EC and CEC across repeated points
+
+===============================================================================
+3. Workspace Reorganization
+===============================================================================
+
+Workspace root:
+C:\Users\hdsp\Documents\Data\Codex
+
+Current structure:
+- data
+- matlab
+- outputs
+
+Important root files:
+- README.txt
+- RECOMMENDED_WORKFLOW.txt
+- SESSION_NOTES.txt
+
+Shared MATLAB helper:
+- matlab\codex_paths.m
+
+This helper now makes scripts read from:
+- data\
+
+and write to:
+- outputs\<analysis_name>\
+
+===============================================================================
+4. Prior Modeling Work and Findings
+===============================================================================
+
+4.1. Early EC modeling with data.mat
+
+Files:
+- matlab\soil_ec_analysis.m
+- outputs\soil_ec_analysis\...
+
+Key findings:
+- Several variables were constant in the original dataset:
+  sigma_w, temperature, H2O volume, saturation
+- This limited how much EC variation could be explained mechanistically
+- pH substantially improved model performance when added
+
+4.2. Random Forest direct EC model
+
+Files:
+- matlab\train_direct_ec_random_forest.m
+- matlab\predict_direct_ec_random_forest.m
+- outputs\direct_ec_random_forest\...
+
+On the original dataset:
+- R^2 in log10 space was around 0.8552 on the saved in-sample model summary
+
+On data_comp.mat:
+- updated direct Random Forest was trained on EC rows
+- summary:
+  R^2_log10 = 0.8650
+  RMSE = 1.77946 S/m
+  MAE = 0.62392 S/m
+
+Important caution:
+- these direct RF summaries were in-sample fits
+- cross-validated results were lower and more conservative
+
+4.3. Random Forest diagnostics on expanded EC data
+
+Files:
+- matlab\diagnose_direct_ec_random_forest.m
+- outputs\direct_ec_random_forest_diagnostics\...
+
+Important result by EC quantile:
+- low EC:
+  RMSE_log10 ~ 0.139
+  mean log residual positive
+  tendency to overpredict
+
+- middle EC:
+  RMSE_log10 ~ 0.080
+  best-predicted regime
+
+- high EC:
+  RMSE_log10 ~ 0.146
+  mean log residual negative
+  tendency to underpredict
+
+Interpretation:
+- middle EC range is predicted best
+- both low and high extremes are harder
+- high EC likely reflects missing salinity / extract chemistry information
+
+4.4. EC-CEC linkage study
+
+Files:
+- matlab\analyze_ec_cec_linkage.m
+- outputs\ec_cec_linkage\...
+
+Important result after corrected stable-link proxy:
+- raw EC model without CEC remained strongest benchmark
+- linked CEC provided only a small improvement on the stable subset
+- CEC appears to add some information, but modestly
+
+Representative result:
+- stable point EC without CEC: R^2_log10 ~ 0.5428
+- stable point EC with linked CEC: R^2_log10 ~ 0.5472
+
+Interpretation:
+- linked CEC is useful as a point-level proxy
+- but it does not transform the predictive problem
+
+===============================================================================
+5. Current Forward Model
+===============================================================================
+
+Main scripts:
+- matlab\fit_forward_soil_ec_model.m
+- matlab\run_forward_soil_ec_on_data_comp.m
+
+Outputs:
+- outputs\forward_soil_ec\forward_model_summary.txt
+- outputs\forward_soil_ec\forward_model_summary.csv
+- outputs\forward_soil_ec\forward_model_coefficients.csv
+- outputs\forward_soil_ec\forward_model_equation.txt
+- outputs\forward_soil_ec\forward_model_equation.tex
+- outputs\forward_soil_ec\forward_model_equation.md
+- outputs\forward_soil_ec\forward_model_predicted_vs_actual.png
+- outputs\forward_soil_ec\forward_soil_ec_model.mat
+
+Current forward model mathematical form:
+
+Let:
+- y = log10(EC)
+
+Then:
+- y_hat = beta0
+        + sum_i beta_state_i * g_i(state_i)
+        + sum_j beta_context_j * h_j(context_j)
+        + sum_(i,j in selected pairs) beta_ij * g_i(state_i) * h_j(context_j)
+
+Prediction:
+- EC_hat = 10^(y_hat)
+
+Current state variables:
+- N
+- P
+- K
+- CEC
+- OC
+- Moisture if available
+
+Current context variables:
+- Clay
+- Silt
+- Sand
+- Coarse
+- pH_CaCl2
+- pH_H2O
+- CaCO3
+
+Current transforms:
+- log1p used for skewed positive variables such as:
+  N, P, K, CEC, OC, CaCO3, Coarse, Clay, Moisture
+- raw values used for less skewed variables
+
+Current interaction structure:
+- each state variable interacts with:
+  Clay, Silt, Sand, pH_H2O, pH_CaCl2, CaCO3
+
+Current run on linked stable-point table from data_comp:
+- Rows used: 1787
+- Physics-informed forward:
+  R^2_log10 = 0.5792
+  RMSE = 0.256752 S/m
+  MAE = 0.093643 S/m
+
+- Random Forest benchmark:
+  R^2_log10 = 0.5169
+  RMSE = 0.292066 S/m
+  MAE = 0.099637 S/m
+
+Important interpretation:
+- In this forward-model framing, the physics-informed model currently
+  outperforms the Random Forest benchmark on the linked stable-point dataset.
+
+Moisture handling:
+- moisture is now treated as an expected placeholder state variable
+- the code runs with or without moisture
+- current summary explicitly reports when moisture is missing
+
+===============================================================================
+6. Current Inverse Model
+===============================================================================
+
+Main scripts:
+- matlab\fit_inverse_soil_health_model.m
+- matlab\run_inverse_soil_health_on_data_comp.m
+
+Outputs:
+- outputs\inverse_soil_health\...
+
+Current inverse model formulation:
+- inputs:
+  EC, pH_CaCl2, pH_H2O, and context variables
+- targets:
+  N, P, K, CEC, OC
+- moisture is supported as:
+  input if measured
+  output if available as a label but not measured
+  or absent entirely
+
+Current inputs used in run on linked data:
+- sensor variables:
+  EC, pH_CaCl2, pH_H2O
+
+- context variables:
+  Clay, Silt, Sand, Coarse, CaCO3
+
+Current inverse-model baseline results:
+- N:
+  R^2_log10 = 0.4640
+- P:
+  R^2_log10 = -0.0032
+- K:
+  R^2_log10 = 0.4775
+- CEC:
+  R^2_log10 = 0.2755
+- OC:
+  R^2_log10 = 0.3948
+
+Interpretation:
+- K and N are moderately recoverable
+- OC is somewhat recoverable
+- CEC is weakly recoverable
+- P is essentially not recoverable with current measured inputs
+
+===============================================================================
+7. Visualization Files Created
+===============================================================================
+
+Important figures:
+
+- outputs\forward_variable_matrix\forward_variable_matrix.png
+  Scatter matrix for forward-model variables
+  Blue panels = within-block (state-state or context-context)
+  Red panels = state-context
+
+- outputs\direct_ec_random_forest_diagnostics\...
+  Residual diagnostics by EC quantile
+
+- outputs\forward_soil_ec\forward_model_predicted_vs_actual.png
+  Forward model predicted vs actual
+
+- outputs\inverse_soil_health\inverse_predicted_vs_actual_*.png
+  One plot for each inverse target
+
+- outputs\soil_ec_analysis\...
+  Earlier EC analysis plots and summaries
+
+===============================================================================
+8. Main Conceptual Conclusions Reached
+===============================================================================
+
+1. A forward EC model is useful and scientifically interpretable.
+
+2. The inverse problem is harder than the forward problem:
+   soil properties -> EC does not imply EC -> soil properties is equally well posed.
+
+3. The best project framing is:
+   - forward model for mechanism
+   - inverse model for application
+   - optional plant-specific health score on top
+
+4. Clay should stay in the model:
+   - as a context variable, not necessarily as a health target
+
+5. Missing ion chemistry is still likely one of the main reasons why high-EC
+   behavior is hard to model well.
+
+6. The current data support proceeding with:
+   - forward modeling now
+   - inverse modeling now
+   - and later incorporating moisture or fuller chemistry if it becomes available
+
+===============================================================================
+9. References Mentioned
+===============================================================================
+
+Random Forest:
+- Breiman (2001), Random Forests
+- Guan et al. (2022), RF for soil water content and EC prediction
+
+Physics-informed conductivity:
+- Qi & Wu (2022), Electrical Conductivity of Clayey Rocks and Soils: A Non-Linear Model
+- Revil & Glover (1998), Nature of surface electrical conductivity in natural sands, sandstones, and clays
+- Archie (1942)
+- Corwin & Yemoto (2019), measurement of soil salinity and EC interpretation
+
+===============================================================================
+10. Recommended Next Steps
+===============================================================================
+
+Likely next step options:
+
+1. Improve and document the inverse model:
+- add equation text similar to the forward model
+- inspect which target-specific inverse models are scientifically useful
+
+2. Define a composite soil-health score:
+- from predicted N, P, K, CEC, OC, Moisture
+- use crop-specific thresholds later
+
+3. Add future moisture data when available:
+- the current code already supports moisture as either input or target
+
+4. If better chemistry becomes available later:
+- plug it into the physics-informed extract-style model
+
+===============================================================================
+11. Important Caveat About This Notes File
+===============================================================================
+
+This is a structured session summary, not a byte-for-byte export of the live
+Codex chat transcript. It is intended to preserve the technical content,
+decisions, equations, file locations, and current project state so work can be
+continued elsewhere.

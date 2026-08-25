@@ -1,0 +1,141 @@
+Restart Checklist
+
+Use this checklist when opening the project on another machine so you can resume work with minimal mistakes.
+
+1. Open the project folder
+
+Confirm you are in:
+
+  C:\Users\hdsp\Documents\Data\Codex
+
+2. Read these files first
+
+In this order:
+
+1. SESSION_NOTES.txt
+2. README.txt
+3. RECOMMENDED_WORKFLOW.txt
+
+These three files summarize:
+- what the project is trying to do
+- how the folders are organized
+- what models already exist
+- what the latest conclusions were
+
+3. Confirm the folder structure
+
+Make sure these folders exist:
+- data
+- matlab
+- outputs
+
+4. Confirm the key data files exist
+
+At minimum, check for:
+- data\data.mat
+- data\data_comp.mat
+
+5. Open MATLAB in the correct folder
+
+Set the working directory to:
+
+  C:\Users\hdsp\Documents\Data\Codex\matlab
+
+This is important because the scripts use codex_paths.m to locate data and outputs.
+
+6. Do not start by editing code
+
+First verify the current setup still works before changing anything.
+
+7. First verification runs
+
+Run one or both of these first:
+
+  run_forward_soil_ec_on_data_comp
+
+  run_inverse_soil_health_on_data_comp
+
+These are the current main model runners for the agreed architecture.
+
+8. After running, check the latest outputs
+
+Look in:
+
+  outputs\forward_soil_ec
+
+  outputs\inverse_soil_health
+
+Key files to inspect:
+- forward_model_summary.txt
+- forward_model_equation.txt
+- inverse_model_summary.txt
+
+9. If you need the broader project context
+
+Also inspect:
+
+  outputs\direct_ec_random_forest_diagnostics
+
+  outputs\ec_cec_linkage
+
+These contain the key diagnostics behind previous modeling decisions.
+
+10. If the live chat is not available
+
+Use SESSION_NOTES.txt as the authoritative summary of:
+- what was done
+- what each script means
+- what the current equations are
+- what the main results were
+
+11. If you continue work in Codex on another machine
+
+Tell Codex the following immediately:
+
+- The project root is:
+  C:\Users\hdsp\Documents\Data\Codex
+
+- Read these files first:
+  SESSION_NOTES.txt
+  README.txt
+  RECOMMENDED_WORKFLOW.txt
+
+- The current architecture is:
+  forward model = state + context -> EC
+  inverse model = EC + pH + context -> soil-health targets
+
+- The current key scripts are:
+  matlab\fit_forward_soil_ec_model.m
+  matlab\run_forward_soil_ec_on_data_comp.m
+  matlab\fit_inverse_soil_health_model.m
+  matlab\run_inverse_soil_health_on_data_comp.m
+
+12. Most important current conclusions
+
+- Clay is treated as a context variable, not primarily a health target.
+- Moisture is a planned state variable placeholder and the code already supports it if added later.
+- The forward model currently performs reasonably on linked stable-point data.
+- The inverse model is promising for N, K, and OC, weaker for CEC, and very poor for P.
+- High-EC behavior is still likely limited by missing chemistry information.
+
+13. Before changing the model design
+
+Ask yourself:
+- Am I changing the forward model?
+- Am I changing the inverse model?
+- Am I changing the soil-health definition?
+- Am I adding moisture or better chemistry data?
+
+Make one of those changes at a time.
+
+14. Safest immediate next action
+
+If unsure, do this:
+
+1. read SESSION_NOTES.txt
+2. run run_forward_soil_ec_on_data_comp
+3. open forward_model_summary.txt
+4. run run_inverse_soil_health_on_data_comp
+5. open inverse_model_summary.txt
+
+That should get you back to the current project state with minimal confusion.

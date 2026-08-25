@@ -1,0 +1,38 @@
+Current physics-informed forward soil EC model
+
+Purpose
+Predict EC from soil-health state variables plus soil context variables.
+
+Response
+y = log10(EC)
+
+Model form
+y_hat = beta0
+      + sum_i beta_state_i * g_i(state_i)
+      + sum_j beta_context_j * h_j(context_j)
+      + sum_(i,j in selected pairs) beta_ij * g_i(state_i) * h_j(context_j)
+
+State variables
+N, P, K, CEC, OC, Moisture if available
+
+Context variables
+Clay, Silt, Sand, Coarse, pH_CaCl2, pH_H2O, CaCO3
+
+Transforms
+For skewed positive variables:
+  g(x) = log1p(x)
+  h(x) = log1p(x)
+For non-skewed variables:
+  use x directly
+
+Selected interactions
+Each state variable is multiplied by the key context variables:
+  Clay, Silt, Sand, pH_H2O, pH_CaCl2, CaCO3
+
+Prediction
+EC_hat = 10^(y_hat)
+
+Interpretation
+State variables represent soil-health quantities of interest.
+Context variables condition how those state variables translate into conductivity.
+Clay belongs in the context block because it modifies the EC response rather than acting only as a health target.

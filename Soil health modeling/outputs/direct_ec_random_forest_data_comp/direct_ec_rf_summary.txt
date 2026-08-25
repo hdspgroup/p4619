@@ -1,0 +1,9 @@
+Direct EC Random Forest summary
+Target: EC
+Units: dS/m input, converted to S/m
+Training rows: 10786
+RMSE = 1.77946
+MAE = 0.62392
+RSS in log10 space = 170.011
+TSS in log10 space = 1259.44
+R^2 in log10 space = 0.8650

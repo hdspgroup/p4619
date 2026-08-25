@@ -1,0 +1,17 @@
+Variable,Missing,Unique
+pH_CaCl2,1,60
+pH_H2O,1,532
+EC_sat,9,3986
+OC,35,2278
+P,5003,1267
+N,15,314
+K,40,5239
+Coarse,2709,92
+Clay,2256,86
+Sand,2256,101
+Silt,2256,94
+sigma_w,0,1
+T,0,1
+H_2OVol,0,1
+saturation,0,1
+EC_dry,2256,86

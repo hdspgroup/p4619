@@ -1,0 +1,54 @@
+Soil EC modeling summary
+Rows in file: 18984
+
+Constant-context variables:
+  sigma_w unique count = 1
+  T unique count = 1
+  H_2OVol unique count = 1
+  saturation unique count = 1
+
+Transformation rules:
+  Clay -> log1p
+  Coarse -> log1p
+  EC_dry -> log1p
+  EC_sat -> log1p
+  K -> log1p
+  N -> log1p
+  OC -> log1p
+  P -> log1p
+
+Model comparison (model selection and variance metrics in log10 space; RMSE/MAE in original scale):
+
+Target: EC_sat
+  Complete cases used: 11857
+  Total sum of squares (TSS, log10 space) = 1150.32
+  Physics-informed: RMSE = 1.92752, MAE = 0.731121, RSS = 479.818, ESS = 670.503, R^2 = 0.5829
+  Power law: RMSE = 1.94219, MAE = 0.747026, RSS = 499.884, ESS = 650.436, R^2 = 0.5654
+  Poly degree 2: RMSE = 5.78855, MAE = 0.757862, RSS = 457.385, ESS = 692.936, R^2 = 0.6024
+  Poly degree 3: RMSE = 21.9902, MAE = 0.899838, RSS = 95065.4, ESS = -93915, R^2 = -81.6425
+  Random forest: RMSE = 1.88278, MAE = 0.723259, RSS = 466.56, ESS = 683.761, R^2 = 0.5944
+  Best polynomial degree: 2
+  Best overall model: Polynomial degree 2
+  Highest TSS-scaled uncertainty contributors in best model:
+    pH_CaCl2: contribution/TSS = 0.0170068, mean|dY/dX| = 1.98518, uncertainty proxy = 1.77912
+    pH_H2O: contribution/TSS = 0.0120678, mean|dY/dX| = 1.70423, uncertainty proxy = 1.66051
+    N: contribution/TSS = 0.000608846, mean|dY/dX| = 1.65809, uncertainty proxy = 0.393932
+    OC: contribution/TSS = 0.000279463, mean|dY/dX| = 0.500932, uncertainty proxy = 0.759629
+    Sand: contribution/TSS = 0.000248759, mean|dY/dX| = 0.0109615, uncertainty proxy = 31.1346
+
+Target: EC_dry
+  Complete cases used: 11857
+  Total sum of squares (TSS, log10 space) = 1610.98
+  Physics-informed: RMSE = 1.01466e-05, MAE = 5.85263e-06, RSS = 78.3496, ESS = 1532.63, R^2 = 0.9514
+  Power law: RMSE = 9.90728e-06, MAE = 4.79517e-06, RSS = 92.8622, ESS = 1518.12, R^2 = 0.9424
+  Poly degree 2: RMSE = 1.20097e-06, MAE = 6.32888e-07, RSS = 106.707, ESS = 1504.27, R^2 = 0.9338
+  Poly degree 3: RMSE = 1.06181e-07, MAE = 5.93905e-08, RSS = 174821, ESS = -173210, R^2 = -107.5185
+  Random forest: RMSE = 6.92057e-06, MAE = 3.1838e-06, RSS = 124.223, ESS = 1486.76, R^2 = 0.9229
+  Best polynomial degree: 2
+  Best overall model: Physics-informed
+  Highest TSS-scaled uncertainty contributors in best model:
+    Clay: contribution/TSS = 1.36433e-11, mean|dY/dX| = 0.00018069, uncertainty proxy = 0.730146
+    Sand: contribution/TSS = 1.05678e-12, mean|dY/dX| = 6.02337e-07, uncertainty proxy = 31.1346
+    Silt: contribution/TSS = 5.89035e-14, mean|dY/dX| = 3.89917e-07, uncertainty proxy = 19.2738
+    pH_CaCl2: contribution/TSS = 4.46851e-14, mean|dY/dX| = 3.9883e-06, uncertainty proxy = 1.77912
+    pH_H2O: contribution/TSS = 3.56758e-14, mean|dY/dX| = 3.81716e-06, uncertainty proxy = 1.66051

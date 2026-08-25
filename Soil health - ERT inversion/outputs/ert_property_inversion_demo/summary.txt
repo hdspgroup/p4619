@@ -1,0 +1,47 @@
+Property-decomposed ERT inversion demo
+Cells: 400
+Measurements: 1924
+Data misfit before: 12.9941
+Data misfit after: 339.751
+Objective before: 8.8318e+09
+Objective after: 1.85758e+08
+Update norm: 0.499159
+Last accepted step length: 0.75
+Texture-sum residual before: 3.73035e-15
+Texture-sum residual after: 53.2695
+Prior penalty after: 756562
+Prior EC penalty after: 217.593
+Prior samples: 49
+Prior rows used: 392
+Prior EC rows used: 49
+Prior file: G:\Other computers\My Computer\Codex\Soil health - ERT inversion\data\prior_samples\soil_property_prior_samples_aligned_dense.csv
+Iterations completed: 3
+Exit reason: maxIter
+Normalized data misfit after: 59.9951
+
+Regularization weights
+  depthBasis.nGaussians = 3
+  depthBasis.includeConstant = 1
+  N: beta=10000 ax=10000 ay=10000 az=10000 cx=10000 cy=10000 cz=10000 depthBasisGamma=10000
+  P: beta=10000 ax=10000 ay=10000 az=10000 cx=10000 cy=10000 cz=10000 depthBasisGamma=10000
+  K: beta=10000 ax=10000 ay=10000 az=10000 cx=10000 cy=10000 cz=10000 depthBasisGamma=10000
+  OC: beta=10000 ax=10000 ay=10000 az=10000 cx=10000 cy=10000 cz=10000 depthBasisGamma=10000
+  Moisture: beta=0.48 ax=1.4 ay=1.55 az=2 cx=0.58 cy=0.58 cz=0.95 depthBasisGamma=10
+  Clay: beta=1.2 ax=3.8 ay=4.1 az=4.8 cx=1.8 cy=1.8 cz=2.4 depthBasisGamma=22
+  Sand: beta=0.85 ax=2.4 ay=2.6 az=3.2 cx=1.1 cy=1.1 cz=1.6 depthBasisGamma=15
+  Silt: beta=0.85 ax=2.4 ay=2.6 az=3.2 cx=1.1 cy=1.1 cz=1.6 depthBasisGamma=15
+  textureSumGamma = 2.5
+  prior.PointEC = 2
+  prior.N = 0.8
+  prior.P = 0.4
+  prior.K = 0.4
+  prior.OC = 0.4
+  prior.Clay = 1.6
+  prior.Moisture = 0.9
+  prior.Silt = 1
+  prior.Sand = 1
+
+Iteration log
+  iter 1 | obj=1.87844e+08 | data=175856 | reg=1.81368e+08 | tex=5.66167e+06 | prior=519660 | misfit=91.4013 | step=0.890661 | alpha=1 | accepted=1
+  iter 2 | obj=1.85626e+08 | data=124065 | reg=1.80121e+08 | tex=4.28775e+06 | prior=961703 | misfit=64.4828 | step=0.947308 | alpha=1.5 | accepted=1
+  iter 3 | obj=1.85758e+08 | data=115431 | reg=1.80067e+08 | tex=4.66702e+06 | prior=756562 | misfit=59.9951 | step=0.522783 | alpha=0.75 | accepted=0

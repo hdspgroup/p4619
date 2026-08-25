@@ -1,0 +1,21 @@
+
+Stage 2 anomaly weight guidance
+  Stage 1 residual entering anomaly stage:
+    weighted phiData: 2.001
+    weighted mean per datum: 0.0003342
+    raw voltage mean abs: 9.571e-06 V
+    raw voltage RMS: 1.839e-05 V
+    raw voltage max abs: 0.000169 V
+  Approximate weights where each penalty matches the Stage 1 residual
+  for the first proposed anomaly update:
+    term      current       matchData     current/match
+    zeroMean  0.001         2.271e+07     4.402e-11    
+    beta      100           2639          0.03789      
+    ax        100           3.967e+04     0.002521     
+    ay        100           3.42e+04      0.002924     
+    az        100           2538          0.0394       
+    cx        1000          3.572e+05     0.002799     
+    cy        1000          2.236e+05     0.004472     
+    cz        1000          1.273e+04     0.07855      
+  Reading: current/match << 1 is data-dominated; ~1 is comparable; >>1 is regularization-dominated.
+

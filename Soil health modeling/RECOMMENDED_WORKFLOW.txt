@@ -1,0 +1,125 @@
+Recommended Workflow
+
+This note gives a practical order for working with new soil EC datasets in this project.
+
+1. Put new input data in the data folder
+
+- Place .mat files, .csv files, or other inputs in:
+  C:\Users\hdsp\Documents\Data\Codex\data
+
+- Keep original raw files unchanged when possible.
+- If you make cleaned or linked versions, give them new filenames rather than overwriting the raw data.
+
+2. Open MATLAB in the matlab folder
+
+Use this as the working directory:
+
+  C:\Users\hdsp\Documents\Data\Codex\matlab
+
+This ensures the shared path helper works correctly.
+
+3. Start with direct predictive benchmarks
+
+If the goal is to predict EC from the variables currently available, start here:
+
+  direct_ec_model
+
+This gives:
+- a quick benchmark across direct model types
+- predicted-vs-actual plots
+- summary tables and saved outputs in:
+  outputs\direct_ec
+
+If you specifically want the Random Forest benchmark and saved model:
+
+  train_direct_ec_random_forest('data.mat', 'direct_ec_rf_model.mat')
+
+Outputs go to:
+  outputs\direct_ec_random_forest
+
+4. Use the broader soil EC analysis when you want interpretation
+
+Run:
+
+  soil_ec_analysis
+
+Use this when you want:
+- correlation heatmaps
+- scatter plot matrices
+- polynomial / Random Forest / physics-informed comparisons
+- sensitivity plots
+- coefficient tables
+
+Outputs go to:
+  outputs\soil_ec_analysis
+
+5. Use the EC-CEC linkage analysis only when repeat-point CEC is relevant
+
+Run:
+
+  analyze_ec_cec_linkage
+
+Use this when:
+- EC and CEC are not measured in the same row
+- repeat-point or stable-link information exists
+- you want to test whether CEC adds value as a linked point-level proxy
+
+Outputs go to:
+  outputs\ec_cec_linkage
+
+6. Use the physics-informed model when you want a more transferable structure
+
+If you have a table with EC and either:
+- soluble-ion chemistry
+or
+- only bulk soil variables such as pH, Clay, OC, CaCO3, N, P, K, and optional CEC
+
+fit the model with:
+
+  model = fit_physics_ec_extract_model(T, ...
+      'TargetName', 'EC_sat', ...
+      'TemperatureC', 25, ...
+      'SaveModelFile', 'physics_ec_extract_model.mat');
+
+Then predict with:
+
+  [ecHat, features] = predict_physics_ec_extract_model(T, model);
+
+Outputs go to:
+  outputs\physics_ec_extract
+
+7. How to choose which result to trust
+
+- If your goal is the best current prediction from available bulk variables:
+  use the direct Random Forest benchmark.
+
+- If your goal is interpretation and a compact scientific story:
+  use the physics-informed model and compare it against the direct benchmark.
+
+- If your goal is to understand whether CEC helps:
+  use the EC-CEC linkage workflow, but treat linked CEC as a proxy rather than same-year measured chemistry.
+
+8. Recommended order for a new dataset
+
+For a new dataset, the usual order should be:
+
+1. Check variable names and units.
+2. Run a direct benchmark.
+3. Run the broader interpretive EC analysis.
+4. If repeat-point CEC exists, test the EC-CEC linkage.
+5. If soluble chemistry exists, fit the physics-informed model in ion-based mode.
+6. If soluble chemistry does not exist, fit the physics-informed model in proxy-based mode.
+7. Compare all models using the same log10-space R^2 metric.
+
+9. General cautions
+
+- Keep track of EC units:
+  some files use S/m and others may use dS/m.
+
+- Most model comparison here uses:
+  R^2 computed in log10 target space
+  so relative error matters more than large-magnitude absolute error.
+
+- Do not interpret linked CEC values as same-time measured EC chemistry.
+
+- If future ion chemistry becomes available, that should take priority over proxy chemistry.

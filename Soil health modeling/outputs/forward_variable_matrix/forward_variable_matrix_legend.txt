@@ -1,0 +1,4 @@
+Forward variable matrix
+Blue panels: both variables are in the same block (state-state or context-context).
+Red panels: one variable is a state variable and the other is a context variable.
+Variables included: EC, N, P, K, CEC, OC, Clay, Silt, Sand, Coarse, pH_CaCl2, pH_H2O, CaCO3

@@ -1,0 +1,9 @@
+Direct EC model summary
+Complete cases: 11857
+TSS in log10 space: 1150.32
+
+Polynomial degree 2: RMSE = 8.94018, MAE = 0.789771, RSS = 95245.6, R^2 = -81.7992
+Random Forest: RMSE = 1.87581, MAE = 0.724631, RSS = 466.2, R^2 = 0.5947
+LSBoost: RMSE = 2.14866, MAE = 0.871007, RSS = 636.426, R^2 = 0.4467
+
+Best direct model: Random Forest

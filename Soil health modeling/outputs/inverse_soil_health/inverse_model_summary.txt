@@ -1,0 +1,10 @@
+Inverse soil-health model
+Sensor variables: EC, pH_CaCl2, pH_H2O
+Context variables: Clay, Silt, Sand, Coarse, CaCO3
+Predicted targets: N, P, K, CEC, OC
+
+  N: N=3006, RMSE=1.58459, MAE=0.723953, R^2=0.4640
+  P: N=3006, RMSE=92806.6, MAE=2568.67, R^2=-0.0032
+  K: N=3006, RMSE=175.101, MAE=95.9954, R^2=0.4775
+  CEC: N=1787, RMSE=5.95731, MAE=3.79428, R^2=0.2755
+  OC: N=3006, RMSE=20.5215, MAE=10.0224, R^2=0.3948
