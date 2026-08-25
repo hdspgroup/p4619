@@ -1,0 +1,1 @@
+Estes archivos son los datos y modelos de la conductividad eléctrica del suelo, a partir de propiedades edafológicas, p.ej. % arena, % arcilla, pH, contenido de N, P, y K. Hay varios modelos, como Random Forest y unos basado en la física. El model Random Forest "direct_ec_random_forest" tiene R^2 de 0.85, lo mejor del grupo.
